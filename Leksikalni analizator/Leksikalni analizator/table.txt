@@ -1,0 +1,20 @@
+sep	com	op	float	float3	sqrt4	pow3	vara	varb	pri2
+(	)	,	+	-	*	/	.	1	2	3	4	5	6	7	8	9	0	s	q	r	t	p	o	w	c	n	l	e	a	b	:	=
+start	sep	sep	com	op	op	op	op	~	float	float	float	float	float	float	float	float	float	float	sqrt1	~	~	~	pow1	~	~	con1	~	~	~	vara	varb	pri1	~
+sep	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
+com	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
+op	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
+float	~	~	~	~	~	~	~	float2	float	float	float	float	float	float	float	float	float	float	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
+float2	~	~	~	~	~	~	~	~	float3	float3	float3	float3	float3	float3	float3	float3	float3	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
+float3	~	~	~	~	~	~	~	~	float3	float3	float3	float3	float3	float3	float3	float3	float3	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
+sqrt1	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	sqrt2	~	~	~	~	~	~	~	~	~	~	~	~	~
+sqrt2	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	sqrt3	~	~	~	~	~	~	~	~	~	~	~	~
+sqrt3	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	sqrt4	~	~	~	~	~	~	~	~	~	~	~
+sqrt4	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
+pow1	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	pow2	~	~	~	~	~	~	~	~	~
+pow2	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	pow3	~	~	~	~	~	~	~	~
+pow3	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
+vara	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
+varb	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
+pri1	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	pri2
+pri2	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
