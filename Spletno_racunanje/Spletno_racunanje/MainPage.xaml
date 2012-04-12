@@ -1,0 +1,52 @@
+﻿<UserControl x:Class="Spletno_racunanje.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="1118" d:DesignWidth="1064" xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk">
+
+    <Grid x:Name="LayoutRoot" Background="#B4E6FFFF" HorizontalAlignment="Stretch">
+        <sdk:Label Height="28" HorizontalAlignment="Center" Name="label1" VerticalAlignment="Top" Width="333" HorizontalContentAlignment="Center" FontStyle="Normal" FontFamily="Verdana" Content="/* Spletni komputacijski stroj" IsEnabled="True" Margin="184,12,180,0" FontSize="22" />
+        <sdk:Label Height="28" HorizontalAlignment="Center" Margin="207,46,198,0" Name="label2" VerticalAlignment="Top" Width="292" Content="Luka Woititz &amp; Andrej Slapnik */" FontSize="12" />
+        <TextBox Height="277" HorizontalAlignment="Left" Margin="12,183,0,0" Name="textBox1" VerticalAlignment="Top" Width="313" VerticalScrollBarVisibility="Visible" Background="#D02A242A" SelectionBackground="#EFE5D9D9" SelectionForeground="#FF140D0D" Foreground="#FF41C441" FontSize="13" TextWrapping="Wrap" HorizontalScrollBarVisibility="Visible" AcceptsReturn="True" />
+        <TextBox Height="277" HorizontalAlignment="Left" Margin="367,183,0,0" Name="textBox2" VerticalAlignment="Top" Width="318" VerticalScrollBarVisibility="Visible" Background="#5AAA9F9F" IsReadOnly="True" />
+        <sdk:Label Height="22" HorizontalAlignment="Left" Margin="12,155,0,0" Name="label3" VerticalAlignment="Top" Width="201" Content="Izvorna koda programske opreme: " />
+        <sdk:Label Content="Rezultati v vmesniku CLI: " Height="22" HorizontalAlignment="Left" Margin="367,155,0,0" Name="label4" VerticalAlignment="Top" Width="201" />
+        <Grid Height="221" HorizontalAlignment="Left" Margin="12,466,0,0" Name="grid1" VerticalAlignment="Top" Width="313" Opacity="1">
+            <Button Content="Naloži program" Height="38" HorizontalAlignment="Left" Margin="157,163,0,0" Name="button1" VerticalAlignment="Top" Width="97" Click="button1_Click" />
+            <Button Content="Naloži sliko" Height="38" HorizontalAlignment="Right" Margin="0,163,165,0" Name="button2" VerticalAlignment="Top" Width="97" Click="button2_Click" />
+            <Button Content="Zaženi" Height="38" HorizontalAlignment="Left" Margin="210,34,0,0" Name="button3" VerticalAlignment="Top" Width="97" Background="#FF15FF2D" FontWeight="Bold" Click="button3_Click">
+                <Button.BorderBrush>
+                    <LinearGradientBrush>
+                        <GradientStop Color="#FFA3AEB9" Offset="0" />
+                        <GradientStop Color="#FF8399A9" Offset="0.314" />
+                        <GradientStop Color="#FF718597" Offset="0.198" />
+                        <GradientStop Color="#FF4FDD54" Offset="0.61" />
+                    </LinearGradientBrush>
+                </Button.BorderBrush>
+            </Button>
+            <Button Content="Počisti" Height="38" HorizontalAlignment="Left" Margin="6,34,0,0" Name="button6" VerticalAlignment="Top" Width="97" Click="button6_Click" Background="#FFFF2F2D">
+                <Button.BorderBrush>
+                    <LinearGradientBrush>
+                        <GradientStop Color="#FFA3AEB9" Offset="0" />
+                        <GradientStop Color="#FF8399A9" Offset="0.375" />
+                        <GradientStop Color="#FF718597" Offset="0.375" />
+                        <GradientStop Color="#FFFF394E" Offset="1" />
+                    </LinearGradientBrush>
+                </Button.BorderBrush>
+            </Button>
+            <sdk:Label Height="28" Margin="62,129,0,0" Name="label6" VerticalAlignment="Top" Content="Abstraktni programski vmesnik: " HorizontalAlignment="Left" Width="182" />
+        </Grid>
+        <TextBox Background="#5AAA9F9F" Height="277" HorizontalAlignment="Left" IsReadOnly="True" Margin="731,183,0,0" Name="textBox3" VerticalAlignment="Top" VerticalScrollBarVisibility="Visible" Width="318" />
+        <sdk:Label Content="Izhod programskega tolmača WS: " Height="22" HorizontalAlignment="Left" Margin="731,155,0,0" Name="label5" VerticalAlignment="Top" Width="201" />
+        <Grid Height="113" HorizontalAlignment="Left" Margin="372,466,0,0" Name="grid2" VerticalAlignment="Top" Width="313">
+            <Button Content="Počisti" Height="38" HorizontalAlignment="Left" Margin="6,34,0,0" Name="button4" VerticalAlignment="Top" Width="97" Click="button4_Click" />
+        </Grid>
+        <Grid Height="113" HorizontalAlignment="Left" Margin="731,466,0,0" Name="grid3" VerticalAlignment="Top" Width="313">
+            <Button Content="Počisti" Height="38" HorizontalAlignment="Left" Margin="6,34,0,0" Name="button5" VerticalAlignment="Top" Width="97" Click="button5_Click" />
+        </Grid>
+        <Image Height="357" HorizontalAlignment="Left" Margin="12,747,0,0" Name="image1" Stretch="Fill" VerticalAlignment="Top" Width="313" />
+        <sdk:Label Height="28" HorizontalAlignment="Left" Margin="12,713,0,0" Name="label7" VerticalAlignment="Top" Width="323" Content="Izhodna segmentirana dvodimenzionalna matrika (slika): " />
+    </Grid>
+</UserControl>
