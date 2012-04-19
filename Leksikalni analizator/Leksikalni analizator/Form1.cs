@@ -74,7 +74,7 @@ namespace Leksikalni_analizator
                         Tokenizer.nextToken();
 
                         if (pomnilnik.ContainsKey(spremenljivka.lexeme))
-                            izpis += "Spremenljivka " + spremenljivka.lexeme + " ima vrednost " + pomnilnik[spremenljivka.lexeme] + "\r\n";
+                            izpis += "Spremenljivka ima vrednost " + pomnilnik[spremenljivka.lexeme] + "\r\n";
                         else izpis += "Ne obstaja spremenljivka " + spremenljivka.lexeme + "\r\n";
 
                         return PRI();
