@@ -1,20 +1,28 @@
-sep	com	op	float	float3	sqrt4	pow3	vara	varb	pri2
-(	)	,	+	-	*	/	.	1	2	3	4	5	6	7	8	9	0	s	q	r	t	p	o	w	c	n	l	e	a	b	:	=
-start	sep	sep	com	op	op	op	op	~	float	float	float	float	float	float	float	float	float	float	sqrt1	~	~	~	pow1	~	~	con1	~	~	~	vara	varb	pri1	~
-sep	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
-com	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
+sep	op	float	float3	cos3	abs3	sin3	pri2	varb	vara	podp	shsep	vejica	print5
+c	o	s	a	b	i	n	+	-	*	/	.	0	1	2	3	4	5	6	7	8	9	(	)	:	=	;	{	}	,	p	r	t
+start	cos1	~	sin1	vara	varb	~	~	op	op	op	op	float2	float	float	float	float	float	float	float	float	float	float	sep	sep	pri1	~	podp	shsep	shsep	vejica	print1	~	~
+cos1	~	cos2	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
+cos2	~	~	cos3	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
+cos3	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
+sin1	~	~	~	~	~	sin2	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
+sin2	~	~	~	~	~	~	sin3	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
+sin3	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
+vara	~	~	~	~	abs2	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
+abs3	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
 op	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
-float	~	~	~	~	~	~	~	float2	float	float	float	float	float	float	float	float	float	float	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
-float2	~	~	~	~	~	~	~	~	float3	float3	float3	float3	float3	float3	float3	float3	float3	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
-float3	~	~	~	~	~	~	~	~	float3	float3	float3	float3	float3	float3	float3	float3	float3	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
-sqrt1	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	sqrt2	~	~	~	~	~	~	~	~	~	~	~	~	~
-sqrt2	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	sqrt3	~	~	~	~	~	~	~	~	~	~	~	~
-sqrt3	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	sqrt4	~	~	~	~	~	~	~	~	~	~	~
-sqrt4	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
-pow1	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	pow2	~	~	~	~	~	~	~	~	~
-pow2	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	pow3	~	~	~	~	~	~	~	~
-pow3	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
-vara	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
-varb	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
-pri1	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	pri2
+sep	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
+float	~	~	~	~	~	~	~	~	~	~	~	float2	float	float	float	float	float	float	float	float	float	float	~	~	~	~	~	~	~	~	~	~	~
+float2	~	~	~	~	~	~	~	~	~	~	~	~	float3	float3	float3	float3	float3	float3	float3	float3	float3	float3	~	~	~	~	~	~	~	~	~	~	~
+float3	~	~	~	~	~	~	~	~	~	~	~	~	float3	float3	float3	float3	float3	float3	float3	float3	float3	float3	~	~	~	~	~	~	~	~	~	~	~
+pri1	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	pri2	~	~	~	~	~	~	~
 pri2	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
+varb	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
+abs2	~	~	abs3	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
+podp	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
+shsep	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
+vejica	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
+print1	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	print2	~
+print2	~	~	~	~	~	print3	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
+print3	~	~	~	~	~	~	print4	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
+print4	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	print5
+print5	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
