@@ -1,0 +1,11 @@
+C:\PraktikumGIT\FERI-Praktikum\Leksikalni analizator\Leksikalni analizator\bin\Debug\table.txt
+C:\PraktikumGIT\FERI-Praktikum\Leksikalni analizator\Leksikalni analizator\bin\Debug\test.txt
+C:\PraktikumGIT\FERI-Praktikum\Leksikalni analizator\Leksikalni analizator\bin\Debug\Leksikalni analizator.exe
+C:\PraktikumGIT\FERI-Praktikum\Leksikalni analizator\Leksikalni analizator\bin\Debug\Leksikalni analizator.pdb
+C:\PraktikumGIT\FERI-Praktikum\Leksikalni analizator\Leksikalni analizator\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\PraktikumGIT\FERI-Praktikum\Leksikalni analizator\Leksikalni analizator\obj\x86\Debug\Leksikalni_analizator.Form1.resources
+C:\PraktikumGIT\FERI-Praktikum\Leksikalni analizator\Leksikalni analizator\obj\x86\Debug\Leksikalni_analizator.Properties.Resources.resources
+C:\PraktikumGIT\FERI-Praktikum\Leksikalni analizator\Leksikalni analizator\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\PraktikumGIT\FERI-Praktikum\Leksikalni analizator\Leksikalni analizator\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\PraktikumGIT\FERI-Praktikum\Leksikalni analizator\Leksikalni analizator\obj\x86\Debug\Leksikalni analizator.exe
+C:\PraktikumGIT\FERI-Praktikum\Leksikalni analizator\Leksikalni analizator\obj\x86\Debug\Leksikalni analizator.pdb

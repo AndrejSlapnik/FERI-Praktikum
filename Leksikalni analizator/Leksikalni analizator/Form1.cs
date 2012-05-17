@@ -91,7 +91,7 @@ namespace Leksikalni_analizator
 
         public bool EP(ref List<double> polje)
         {
-            if (Tokenizer.currentToken().lexeme == "abs" || Tokenizer.currentToken().lexeme == "cos" || Tokenizer.currentToken().lexeme == "sin" || Tokenizer.currentToken().lexeme == "sin" || Tokenizer.currentToken().lexeme == "(" || Tokenizer.currentToken().type == "float" || Tokenizer.currentToken().type == "float3" || Tokenizer.currentToken().lexeme == "-" || Tokenizer.currentToken().type == "vara" || Tokenizer.currentToken().type == "varb")
+            if (Tokenizer.currentToken().type == "lin3" || Tokenizer.currentToken().type == "std3" || Tokenizer.currentToken().type == "pear4" || Tokenizer.currentToken().type == "avg3" || Tokenizer.currentToken().lexeme == "abs" || Tokenizer.currentToken().lexeme == "cos" || Tokenizer.currentToken().lexeme == "sin" || Tokenizer.currentToken().lexeme == "sin" || Tokenizer.currentToken().lexeme == "(" || Tokenizer.currentToken().type == "float" || Tokenizer.currentToken().type == "float3" || Tokenizer.currentToken().lexeme == "-" || Tokenizer.currentToken().type == "vara" || Tokenizer.currentToken().type == "varb")
             {
                 double vrednostIzraza = 0;
                 bool rezultatE = E(ref vrednostIzraza);
@@ -210,6 +210,165 @@ namespace Leksikalni_analizator
             else return true;
         }
 
+        double avg(double[] polje)
+        {
+            double vsota = 0.00;
+
+            for (int i = 0; i < polje.Length; i++)
+            {
+                vsota += polje[i];
+            }
+
+            vsota /= (double)polje.Length;
+
+            return vsota;
+        }
+
+        double std(double[] polje)
+        {
+            double povprecje = avg(polje);
+            double vsota = 0.00;
+            int velikost = polje.Length;
+
+            for (int i = 0; i < velikost; i++)
+            {
+                double vrednost = polje[i] - povprecje;
+                vsota += Math.Pow(vrednost, 2);
+            }
+
+            vsota /= (double)velikost;
+            vsota = Math.Sqrt(vsota);
+
+            return vsota;
+        }
+
+        double pear(double[] polje)
+        {
+            if (polje.Length % 2 != 0)
+            {
+                throw new Exception("Velikost statisticne populacije za Pearsonov koef. mora biti soda!");
+
+            }
+
+            double r = 0.00;
+            int velikost = polje.Length;
+            double[] sodo = new double[velikost / 2];
+            double[] liho = new double[sodo.Length];
+            double vsota = 0.00;
+
+            for (int i = 0; i < velikost / 2; i++)
+            {
+                sodo[i] = polje[i];
+            }
+
+            for (int i = velikost / 2; i < velikost; i++)
+            {
+                liho[i - (velikost / 2)] = polje[i];
+            }
+
+            velikost /= 2;
+            double povprecje_x = avg(sodo);
+            double povprecje_y = avg(liho);
+
+            for (int i = 0; i < velikost; i++)
+            {
+                vsota += ((sodo[i] - povprecje_x) * (liho[i] - povprecje_y));
+            }
+
+            double vsota2 = 0.00;
+
+            for (int i = 0; i < velikost; i++)
+            {
+                vsota2 += Math.Pow((sodo[i] - povprecje_x), 2);
+            }
+
+            vsota2 = Math.Sqrt(vsota2);
+
+            double vsota3 = 0.00;
+
+            for (int i = 0; i < velikost; i++)
+            {
+                vsota3 += Math.Pow((liho[i] - povprecje_y), 2);
+            }
+
+            vsota3 = Math.Sqrt(vsota3);
+
+            vsota2 *= vsota3;
+
+            r = vsota / vsota2;
+
+            return r;
+        }
+
+        int comparePoints(PointF a, PointF b)
+        {
+            if (a.X < b.X) return -1;
+            if (a.X > b.X) return 1;
+            return 0;
+        }
+
+        double linear(double[] polje)
+        {
+            if (polje.Length < 5 || polje.Length%2 != 1) return 0;
+
+            double[] x = new double[(polje.Length - 1) / 2];
+            double[] y = new double[(polje.Length - 1) / 2];
+
+            double xt = polje[polje.Length-1];
+
+            PointF[] points = new PointF[x.Length];
+
+            for (int i = 0; i < x.Length; i++)
+            {
+                x[i] = polje[i];
+            }
+
+            for (int i = 0; i < y.Length; i++)
+            {
+                y[i] = polje[i+x.Length];
+            }
+
+            for (int i = 0; i < points.Length; i++)
+            {
+                points[i] = new PointF((float)x[i], (float)y[i]);
+            }//pretvorimo polje v točke
+
+            List<PointF> listPoints = new List<PointF>(points);
+
+            listPoints.Sort(comparePoints);
+            //sortirano po x osi
+
+            if (xt < listPoints.First().X) return 0;
+            if (xt > listPoints.Last().X) return 0;
+            //ni v intervalu
+
+            int secondPointIndex = listPoints.Count; //če ni nobena večja in je v intervalu, je zadnja večja
+
+            int firstPointIndex = listPoints.Count-1;
+
+            for (int i = 0; i < listPoints.Count; i++)
+            {
+                if (xt < listPoints[i].X)
+                {
+                    secondPointIndex = i;
+                    firstPointIndex = i - 1;
+                    break;
+                }
+            }
+
+            double a, b;
+
+            a = xt - listPoints[firstPointIndex].X;
+            b = listPoints[secondPointIndex].X - xt;
+
+            double y1 = a / (a + b) * listPoints[firstPointIndex].Y;
+            double y2 = b / (a + b) * listPoints[secondPointIndex].Y;
+
+            double yn = y1 + y2;
+
+            return yn;
+        }
+
         bool F(ref double vhodnoStevilo)
         {
             if (Tokenizer.currentToken().type == "abs3"
@@ -234,6 +393,7 @@ namespace Leksikalni_analizator
                             vhodnoStevilo = Math.Cos(vhodnoStevilo);
                             break;
                     }
+                    
                     if (Tokenizer.currentToken().lexeme == ")")
                     {
                         Tokenizer.nextToken();
@@ -242,6 +402,78 @@ namespace Leksikalni_analizator
                     else return false;
                 }
                 return false;
+            }
+            else if (Tokenizer.currentToken().type == "lin3" || Tokenizer.currentToken().type == "avg3" || Tokenizer.currentToken().type == "std3" || Tokenizer.currentToken().type == "pear4")
+            {
+                token funkcija = Tokenizer.currentToken();
+                Tokenizer.nextToken();
+
+                if (Tokenizer.currentToken().lexeme == "(")
+                {
+                    Tokenizer.nextToken();
+
+                    if (Tokenizer.currentToken().type == "vara" || Tokenizer.currentToken().type == "varb")
+                    {
+                        token spremenljivka = Tokenizer.currentToken();
+
+                        Tokenizer.nextToken();
+
+                        try
+                        {
+                            string strpolje="";
+                            if (pomnilnik.ContainsKey(spremenljivka.lexeme))
+                                strpolje = pomnilnik[spremenljivka.lexeme];
+
+                            if (strpolje == "") return false;
+
+                            string[] splitstrpolje = strpolje.Split(new char[] { ' ' });
+
+                            double[] polje = new double[splitstrpolje.Length-1];
+
+                            for (int i = 0; i < polje.Length; i++)
+                            {
+                                polje[i] = double.Parse(splitstrpolje[i]);
+                            }
+                            double rezultat = 0;
+                            switch (funkcija.lexeme)
+                            {
+                                case "avg":
+                                    rezultat = avg(polje);
+                                    break;
+
+                                case "std":
+                                    rezultat = std(polje);
+                                    break;
+
+                                case "pear":
+                                    rezultat = pear(polje);
+                                    break;
+
+                                case "lin":
+                                    rezultat = linear(polje);
+                                    break;
+                            }
+
+                            vhodnoStevilo = rezultat;
+
+                        }
+                        catch (Exception ex)
+                        {
+                            izpis += "Ne da se uporabiti spremenljivke z polju v aritmetičnih izrazih!\r\n";
+                            vhodnoStevilo = double.NaN;
+                        }
+
+                        if (Tokenizer.currentToken().lexeme == ")")
+                        {
+                            Tokenizer.nextToken();
+
+                            return true;
+                        }
+                        else return false;
+                    }
+                    else return false;
+                }
+                else return false;
             }
             else if (Tokenizer.currentToken().lexeme == "(")
             {
@@ -259,7 +491,7 @@ namespace Leksikalni_analizator
                 || Tokenizer.currentToken().type == "float3"
                 )
             {
-                vhodnoStevilo = double.Parse(Tokenizer.currentToken().lexeme);
+                vhodnoStevilo = double.Parse(Tokenizer.currentToken().lexeme.Replace('.',','));
 
                 Tokenizer.nextToken();
                 return true;
@@ -272,7 +504,7 @@ namespace Leksikalni_analizator
                 || Tokenizer.currentToken().type == "float3"
                 )
                 {
-                    vhodnoStevilo = double.Parse(Tokenizer.currentToken().lexeme);
+                    vhodnoStevilo = double.Parse(Tokenizer.currentToken().lexeme.Replace('.',','));
 
                     Tokenizer.nextToken();
                     return true;

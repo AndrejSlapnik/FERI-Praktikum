@@ -77,9 +77,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="test2.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="table.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
