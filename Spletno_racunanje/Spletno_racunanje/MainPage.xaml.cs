@@ -100,9 +100,27 @@ namespace Spletno_racunanje
             else return true;
         }
 
-        public bool EP(ref List<double> polje)
+        /*public bool EP(ref List<double> polje)
         {
             if (Tokenizer.currentToken().lexeme == "abs" || Tokenizer.currentToken().lexeme == "cos" || Tokenizer.currentToken().lexeme == "sin" || Tokenizer.currentToken().lexeme == "sin" || Tokenizer.currentToken().lexeme == "(" || Tokenizer.currentToken().type == "float" || Tokenizer.currentToken().type == "float3" || Tokenizer.currentToken().lexeme == "-" || Tokenizer.currentToken().type == "vara" || Tokenizer.currentToken().type == "varb")
+            {
+                double vrednostIzraza = 0;
+                bool rezultatE = E(ref vrednostIzraza);
+                polje.Add(vrednostIzraza);
+                return rezultatE;
+            }
+
+            else if (Tokenizer.currentToken().lexeme == "{")
+            {
+                return POLJE(ref polje);
+            }
+
+            else return false;
+        }*/
+
+        public bool EP(ref List<double> polje)
+        {
+            if (Tokenizer.currentToken().type == "std3" || Tokenizer.currentToken().type == "pear4" || Tokenizer.currentToken().type == "avg3" || Tokenizer.currentToken().lexeme == "abs" || Tokenizer.currentToken().lexeme == "cos" || Tokenizer.currentToken().lexeme == "sin" || Tokenizer.currentToken().lexeme == "sin" || Tokenizer.currentToken().lexeme == "(" || Tokenizer.currentToken().type == "float" || Tokenizer.currentToken().type == "float3" || Tokenizer.currentToken().lexeme == "-" || Tokenizer.currentToken().type == "vara" || Tokenizer.currentToken().type == "varb")
             {
                 double vrednostIzraza = 0;
                 bool rezultatE = E(ref vrednostIzraza);
@@ -221,7 +239,7 @@ namespace Spletno_racunanje
             else return true;
         }
 
-        bool F(ref double vhodnoStevilo)
+        /*bool F(ref double vhodnoStevilo)
         {
             if (Tokenizer.currentToken().type == "abs3"
                 || Tokenizer.currentToken().type == "sin3"
@@ -307,6 +325,253 @@ namespace Spletno_racunanje
                 return true;
             }
             return false;
+        }*/
+
+        double avg(double[] polje)
+        {
+            double vsota = 0.00;
+
+            for (int i = 0; i < polje.Length; i++)
+            {
+                vsota += polje[i];
+            }
+
+            vsota /= (double)polje.Length;
+
+            return vsota;
+        }
+
+        double std(double[] polje)
+        {
+            double povprecje = avg(polje);
+            double vsota = 0.00;
+            int velikost = polje.Length;
+
+            for (int i = 0; i < velikost; i++)
+            {
+                double vrednost = polje[i] - povprecje;
+                vsota += Math.Pow(vrednost, 2);
+            }
+
+            vsota /= (double)velikost;
+            vsota = Math.Sqrt(vsota);
+
+            return vsota;
+        }
+
+        double pear(double[] polje)
+        {
+            if (polje.Length % 2 != 0)
+            {
+                throw new Exception("Velikost statisticne populacije za Pearsonov koef. mora biti soda!");
+
+            }
+
+            double r = 0.00;
+            int velikost = polje.Length;
+            double[] sodo = new double[velikost / 2];
+            double[] liho = new double[sodo.Length];
+            double vsota = 0.00;
+
+            for (int i = 0; i < velikost / 2; i++)
+            {
+                sodo[i] = polje[i];
+            }
+
+            for (int i = velikost / 2; i < velikost; i++)
+            {
+                liho[i - (velikost / 2)] = polje[i];
+            }
+
+            velikost /= 2;
+            double povprecje_x = avg(sodo);
+            double povprecje_y = avg(liho);
+
+            for (int i = 0; i < velikost; i++)
+            {
+                vsota += ((sodo[i] - povprecje_x) * (liho[i] - povprecje_y));
+            }
+
+            double vsota2 = 0.00;
+
+            for (int i = 0; i < velikost; i++)
+            {
+                vsota2 += Math.Pow((sodo[i] - povprecje_x), 2);
+            }
+
+            vsota2 = Math.Sqrt(vsota2);
+
+            double vsota3 = 0.00;
+
+            for (int i = 0; i < velikost; i++)
+            {
+                vsota3 += Math.Pow((liho[i] - povprecje_y), 2);
+            }
+
+            vsota3 = Math.Sqrt(vsota3);
+
+            vsota2 *= vsota3;
+
+            r = vsota / vsota2;
+
+            return r;
+        }
+
+        bool F(ref double vhodnoStevilo)
+        {
+            if (Tokenizer.currentToken().type == "abs3"
+                || Tokenizer.currentToken().type == "sin3"
+                || Tokenizer.currentToken().type == "cos3")
+            {
+                token spremenljivka = Tokenizer.currentToken();
+                Tokenizer.nextToken();
+                if (Tokenizer.currentToken().lexeme == "(")
+                {
+                    Tokenizer.nextToken();
+                    bool temp = E(ref vhodnoStevilo);
+                    switch (spremenljivka.lexeme)
+                    {
+                        case "abs":
+                            vhodnoStevilo = Math.Abs(vhodnoStevilo);
+                            break;
+                        case "sin":
+                            vhodnoStevilo = Math.Sin(vhodnoStevilo);
+                            break;
+                        case "cos":
+                            vhodnoStevilo = Math.Cos(vhodnoStevilo);
+                            break;
+                    }
+
+                    if (Tokenizer.currentToken().lexeme == ")")
+                    {
+                        Tokenizer.nextToken();
+                        return temp;
+                    }
+                    else return false;
+                }
+                return false;
+            }
+            else if (Tokenizer.currentToken().type == "avg3" || Tokenizer.currentToken().type == "std3" || Tokenizer.currentToken().type == "pear4")
+            {
+                token funkcija = Tokenizer.currentToken();
+                Tokenizer.nextToken();
+
+                if (Tokenizer.currentToken().lexeme == "(")
+                {
+                    Tokenizer.nextToken();
+
+                    if (Tokenizer.currentToken().type == "vara" || Tokenizer.currentToken().type == "varb")
+                    {
+                        token spremenljivka = Tokenizer.currentToken();
+
+                        Tokenizer.nextToken();
+
+                        try
+                        {
+                            string strpolje = "";
+                            if (pomnilnik.ContainsKey(spremenljivka.lexeme))
+                                strpolje = pomnilnik[spremenljivka.lexeme];
+
+                            if (strpolje == "") return false;
+
+                            string[] splitstrpolje = strpolje.Split(new char[] { ' ' });
+
+                            double[] polje = new double[splitstrpolje.Length - 1];
+
+                            for (int i = 0; i < polje.Length; i++)
+                            {
+                                polje[i] = double.Parse(splitstrpolje[i]);
+                            }
+                            double rezultat = 0;
+                            switch (funkcija.lexeme)
+                            {
+                                case "avg":
+                                    rezultat = avg(polje);
+                                    break;
+
+                                case "std":
+                                    rezultat = std(polje);
+                                    break;
+
+                                case "pear":
+                                    rezultat = pear(polje);
+                                    break;
+                            }
+
+                            vhodnoStevilo = rezultat;
+
+                        }
+                        catch (Exception ex)
+                        {
+                            izpis += "Ne da se uporabiti spremenljivke z polju v aritmetičnih izrazih!\r\n";
+                            vhodnoStevilo = double.NaN;
+                        }
+
+                        if (Tokenizer.currentToken().lexeme == ")")
+                        {
+                            Tokenizer.nextToken();
+
+                            return true;
+                        }
+                        else return false;
+                    }
+                    else return false;
+                }
+                else return false;
+            }
+            else if (Tokenizer.currentToken().lexeme == "(")
+            {
+                Tokenizer.nextToken();
+                bool temp = E(ref vhodnoStevilo);
+
+                if (Tokenizer.currentToken().lexeme == ")")
+                {
+                    Tokenizer.nextToken();
+                    return temp;
+                }
+                else return false;
+            }
+            else if (Tokenizer.currentToken().type == "float"
+                || Tokenizer.currentToken().type == "float3"
+                )
+            {
+                vhodnoStevilo = double.Parse(Tokenizer.currentToken().lexeme.Replace('.', ','));
+
+                Tokenizer.nextToken();
+                return true;
+            }
+
+            else if (Tokenizer.currentToken().lexeme == "-")
+            {
+                Tokenizer.nextToken();
+                if (Tokenizer.currentToken().type == "float"
+                || Tokenizer.currentToken().type == "float3"
+                )
+                {
+                    vhodnoStevilo = double.Parse(Tokenizer.currentToken().lexeme.Replace('.', ','));
+
+                    Tokenizer.nextToken();
+                    return true;
+                }
+                else return false;
+            }
+            else if (Tokenizer.currentToken().type == "vara"
+                || Tokenizer.currentToken().type == "varb")
+            {
+                try
+                {
+                    if (pomnilnik.ContainsKey(Tokenizer.currentToken().lexeme))
+                        vhodnoStevilo = double.Parse(pomnilnik[Tokenizer.currentToken().lexeme]);
+                }
+                catch (Exception ex)
+                {
+                    izpis += "Ne da se uporabiti spremenljivke z polju v aritmetičnih izrazih!\r\n";
+                    vhodnoStevilo = double.NaN;
+                }
+                Tokenizer.nextToken();
+                return true;
+            }
+            return false;
         }
 
         private void button1_Click(object sender, RoutedEventArgs e)
@@ -323,6 +588,7 @@ namespace Spletno_racunanje
                 {
                     using (FileStream tok = dialog.File.OpenRead())
                     {
+                        //MessageBox.Show("nekaj");
                         byte[] pomnilnik = new byte[(int)tok.Length];
                         tok.Read(pomnilnik, 0, (int)tok.Length);
 
@@ -336,11 +602,13 @@ namespace Spletno_racunanje
                         IsolatedStorageFile ISF = IsolatedStorageFile.GetUserStoreForApplication();
 
                         IsolatedStorageFileStream tok2 = new IsolatedStorageFileStream("izvorna.koda", FileMode.Create, ISF);
+                        //IsolatedStorageFileStream tok2 = new IsolatedStorageFileStream("tabela.podatki", FileMode.Create, ISF);
                         tok2.Write(pomnilnik, 0, pomnilnik.Length);
 
                         tok2.Close();
                         Pocisti(0);
 
+                        //MessageBox.Show("nekaj");
                         for (int i = 0; i < pomnilnik.Length; i++)
                         {
                             textBox1.Text += niz[i];
@@ -374,7 +642,7 @@ namespace Spletno_racunanje
                         }
 
                         for (int i = 0; i < pomnilnik.Length; i++) vsebina_tabele += niz[i];
-
+                        
                         tokenizer leksikalni_analizator = new tokenizer(vsebina_tabele, vsebina_datoteke);
                         String tabela = leksikalni_analizator.vrniTabelo();
 
@@ -384,10 +652,11 @@ namespace Spletno_racunanje
                         textBox2.Text = izpis;
                     }
                 }
-
-                catch (Exception)
+                
+                catch (Exception er)
                 {
                     MessageBox.Show("Napaka pri odpiranju datoteke izvorne programske kode!");
+                    MessageBox.Show(er.Message);
                 }
             }
 

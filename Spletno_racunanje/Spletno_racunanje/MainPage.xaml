@@ -38,7 +38,7 @@
             </Button>
             <sdk:Label Height="28" Margin="62,129,0,0" Name="label6" VerticalAlignment="Top" Content="Abstraktni programski vmesnik: " HorizontalAlignment="Left" Width="182" />
         </Grid>
-        <TextBox Background="#5AAA9F9F" Height="277" HorizontalAlignment="Left" IsReadOnly="True" Margin="731,183,0,0" Name="textBox3" VerticalAlignment="Top" VerticalScrollBarVisibility="Visible" Width="318" />
+        <TextBox Background="#5AAA9F9F" Height="277" HorizontalAlignment="Left" IsReadOnly="False" Margin="731,183,0,0" Name="textBox3" VerticalAlignment="Top" VerticalScrollBarVisibility="Visible" Width="318" />
         <sdk:Label Content="Izhod programskega tolmača WS: " Height="22" HorizontalAlignment="Left" Margin="731,155,0,0" Name="label5" VerticalAlignment="Top" Width="201" />
         <Grid Height="113" HorizontalAlignment="Left" Margin="372,466,0,0" Name="grid2" VerticalAlignment="Top" Width="313">
             <Button Content="Počisti" Height="38" HorizontalAlignment="Left" Margin="6,34,0,0" Name="button4" VerticalAlignment="Top" Width="97" Click="button4_Click" />
