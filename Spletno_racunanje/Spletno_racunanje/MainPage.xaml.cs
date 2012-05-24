@@ -13,13 +13,25 @@ using System.IO;
 using System.IO.IsolatedStorage;
 using System.Windows.Media.Imaging;
 
+
 namespace Spletno_racunanje
 {
     public partial class MainPage : UserControl
     {
+        public class PointF
+        {
+            public double X, Y;
+
+            public PointF(double a, double b)
+            {
+                X = a;
+                Y = b;
+            }
+        }
+
         Dictionary<string, string> pomnilnik = new Dictionary<string, string>();
 
-        string izpis = "";
+        string izpis = "", rezultatiIzpis="";
         tokenizer Tokenizer = null;
 
         public MainPage()
@@ -61,6 +73,8 @@ namespace Spletno_racunanje
                         if (!pomnilnik.ContainsKey(spremenljivka.lexeme))
                             pomnilnik.Add(spremenljivka.lexeme, izpisRezultati);
                         else pomnilnik[spremenljivka.lexeme] = izpisRezultati;
+
+                        rezultatiIzpis = izpisRezultati;
 
                         return rezultat && PRI();
                     }
@@ -649,9 +663,11 @@ namespace Spletno_racunanje
 
         private void button1_Click(object sender, RoutedEventArgs e)
         {
+
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.InitialDirectory = "C:\\";
             //dialog.Filter = "WS datoteke | *.ws";
+
 
             bool? rezultat = dialog.ShowDialog();
 
@@ -706,6 +722,8 @@ namespace Spletno_racunanje
                         pomnilnik = new byte[tok4.Length];
                         tok4.Read(pomnilnik, 0, (int)tok4.Length);
 
+                        //vredu
+
                         tok4.Close();
                         niz = new char[pomnilnik.Length];
 
@@ -715,12 +733,24 @@ namespace Spletno_racunanje
                         }
 
                         for (int i = 0; i < pomnilnik.Length; i++) vsebina_tabele += niz[i];
-                        
+
+                        //MessageBox.Show("Test");
                         tokenizer leksikalni_analizator = new tokenizer(vsebina_tabele, vsebina_datoteke);
-                        String tabela = leksikalni_analizator.vrniTabelo();
+                        //MessageBox.Show("Test lekser");
+                        //MessageBox.Show(vsebina_tabele);
+                        //MessageBox.Show(vsebina_datoteke);
+                        MessageBox.Show((leksikalni_analizator == null) + " (ali je null)");
+                        //String tabela = leksikalni_analizator.vrniTabelo();
+                        MessageBox.Show("Test tabela");
+                        Tokenizer = leksikalni_analizator;
+                        parse();
+
+                        //textBox2.Text = izpis;
+                        MessageBox.Show(izpis);
+                        MessageBox.Show(rezultatiIzpis);
 
                         //Zacasni izpis tabele osnovnih leksikalnih simbolov in leksilanih vrednosti.
-                        MessageBox.Show(tabela.ToString());
+                        //MessageBox.Show(tabela.ToString());
 
                         textBox2.Text = izpis;
                     }
@@ -811,6 +841,8 @@ namespace Spletno_racunanje
 
                 tok.Write(pomnilnik, 0, pomnilnik.Length);
                 tok.Close();
+
+                MessageBox.Show("Uspešno zapisalo.");
             }
 
             catch (Exception)
@@ -895,6 +927,8 @@ namespace Spletno_racunanje
 
             public token nextToken()
             {
+                goto1:
+                //MessageBox.Show("test in nexttoken " + (file == null));
                 if (stop) return current = new token(-1, -1, true, "eof", "eof");
                 if (pos == file.Length)
                 {
@@ -915,7 +949,13 @@ namespace Spletno_racunanje
                     return nextToken();
                 }
 
-                if (abeceda.IndexOf(file[pos]) == -1) throw new Exception("Napaka v datoteki, znak ni del abecede");
+                if (abeceda.IndexOf(file[pos]) == -1)
+                {
+                    pos++;
+                    col++;
+                    return nextToken();
+                    goto goto1; //throw new Exception("Napaka v datoteki, znak ni del abecede: " + file[pos]);
+                }
 
                 String produkcija = pravila[stanje][abeceda.IndexOf(file[pos])];
                 if (produkcija == "~" && končna.IndexOf(stanje) == -1)
@@ -958,7 +998,7 @@ namespace Spletno_racunanje
                     lines.Add(line);
                 }
 
-                List<String> konèna_stanja = lines[0].Split('\t').ToList();
+                List<String> končna_stanja = lines[0].Split('\t').ToList();
                 lines.RemoveAt(0); //zapišemo konèna stanja
 
                 List<Char> abeceda = new List<Char>();
@@ -982,7 +1022,13 @@ namespace Spletno_racunanje
                     if (preslikave.Count != abeceda.Count) throw new Exception("Napaka v vrstici \"" + vrstica + "\", ni enako število možnosti kot je znakov v abecedi.");
                 } //zapišemo vsa pravila / preslikave
 
-                
+                this.pravila = pravila;
+                this.abeceda = abeceda;
+                this.končna = končna_stanja;
+                stanja = pravila.Keys.ToList();
+                stanje = "start";
+                lexeme = "";
+                file = vsebina;
             }
 
 
@@ -990,10 +1036,15 @@ namespace Spletno_racunanje
             {
                 String tabela = "";
                 token temp;
+                int i = 0;
                 do
                 {
+                    //MessageBox.Show("token " + i++);
+                    //MessageBox.Show((this == null) + " (je this null?");
                     temp = this.nextToken();
+                    //MessageBox.Show("nexttoken OK");
                     tabela += "Vrednost: " + temp.lexeme + "\tStanje: " + temp.type + "\tCol: " + temp.col + "\tRow:" + temp.row + "\tEof:" + temp.eof + "\r\n";
+                    //MessageBox.Show(tabela);
                 } while (!temp.eof);
                 return tabela;
             }
