@@ -91,7 +91,7 @@ namespace Leksikalni_analizator
 
         public bool EP(ref List<double> polje)
         {
-            if (Tokenizer.currentToken().type == "lin3" || Tokenizer.currentToken().type == "std3" || Tokenizer.currentToken().type == "pear4" || Tokenizer.currentToken().type == "avg3" || Tokenizer.currentToken().lexeme == "abs" || Tokenizer.currentToken().lexeme == "cos" || Tokenizer.currentToken().lexeme == "sin" || Tokenizer.currentToken().lexeme == "sin" || Tokenizer.currentToken().lexeme == "(" || Tokenizer.currentToken().type == "float" || Tokenizer.currentToken().type == "float3" || Tokenizer.currentToken().lexeme == "-" || Tokenizer.currentToken().type == "vara" || Tokenizer.currentToken().type == "varb")
+            if (Tokenizer.currentToken().type == "der" || Tokenizer.currentToken().type == "lin3" || Tokenizer.currentToken().type == "std3" || Tokenizer.currentToken().type == "pear4" || Tokenizer.currentToken().type == "avg3" || Tokenizer.currentToken().lexeme == "abs" || Tokenizer.currentToken().lexeme == "cos" || Tokenizer.currentToken().lexeme == "sin" || Tokenizer.currentToken().lexeme == "sin" || Tokenizer.currentToken().lexeme == "(" || Tokenizer.currentToken().type == "float" || Tokenizer.currentToken().type == "float3" || Tokenizer.currentToken().lexeme == "-" || Tokenizer.currentToken().type == "vara" || Tokenizer.currentToken().type == "varb")
             {
                 double vrednostIzraza = 0;
                 bool rezultatE = E(ref vrednostIzraza);
@@ -306,7 +306,68 @@ namespace Leksikalni_analizator
             if (a.X > b.X) return 1;
             return 0;
         }
+        double derive(double[] polje)
+        {
+            if (polje.Length < 5 || polje.Length % 2 != 1) return 0;
 
+            double[] x = new double[(polje.Length - 1) / 2 - 1];
+            double[] y = new double[(polje.Length - 1) / 2 - 1];
+
+            double xt = polje[polje.Length - 1];
+
+            PointF[] points = new PointF[x.Length];
+
+            for (int i = 0; i < x.Length; i++)
+            {
+                x[i] = polje[i + 1] + polje[i];
+                x[i] = x[i] / 2;
+            }
+
+            for (int i = 0; i < y.Length; i++)
+            {
+                y[i] = polje[i + 1 + x.Length] - polje[i + x.Length];
+            }
+
+            for (int i = 0; i < points.Length; i++)
+            {
+                points[i] = new PointF((float)x[i], (float)y[i]);
+            }//pretvorimo polje v točke
+
+            List<PointF> listPoints = new List<PointF>(points);
+
+            listPoints.Sort(comparePoints);
+            //sortirano po x osi
+
+            if (xt < listPoints.First().X) return 0;
+            if (xt > listPoints.Last().X) return 0;
+            //ni v intervalu
+
+            int secondPointIndex = listPoints.Count; //če ni nobena večja in je v intervalu, je zadnja večja
+
+            int firstPointIndex = listPoints.Count - 1;
+
+            for (int i = 0; i < listPoints.Count; i++)
+            {
+                if (xt < listPoints[i].X)
+                {
+                    secondPointIndex = i;
+                    firstPointIndex = i - 1;
+                    break;
+                }
+            }
+
+            double a, b;
+
+            a = xt - listPoints[firstPointIndex].X;
+            b = listPoints[secondPointIndex].X - xt;
+
+            double y1 = a / (a + b) * listPoints[firstPointIndex].Y;
+            double y2 = b / (a + b) * listPoints[secondPointIndex].Y;
+
+            double yn = y1 + y2;
+
+            return yn;
+        }
         double linear(double[] polje)
         {
             if (polje.Length < 5 || polje.Length%2 != 1) return 0;
@@ -403,7 +464,7 @@ namespace Leksikalni_analizator
                 }
                 return false;
             }
-            else if (Tokenizer.currentToken().type == "lin3" || Tokenizer.currentToken().type == "avg3" || Tokenizer.currentToken().type == "std3" || Tokenizer.currentToken().type == "pear4")
+            else if (Tokenizer.currentToken().type == "der" || Tokenizer.currentToken().type == "lin3" || Tokenizer.currentToken().type == "avg3" || Tokenizer.currentToken().type == "std3" || Tokenizer.currentToken().type == "pear4")
             {
                 token funkcija = Tokenizer.currentToken();
                 Tokenizer.nextToken();
@@ -420,7 +481,7 @@ namespace Leksikalni_analizator
 
                         try
                         {
-                            string strpolje="";
+                            string strpolje = "";
                             if (pomnilnik.ContainsKey(spremenljivka.lexeme))
                                 strpolje = pomnilnik[spremenljivka.lexeme];
 
@@ -428,7 +489,7 @@ namespace Leksikalni_analizator
 
                             string[] splitstrpolje = strpolje.Split(new char[] { ' ' });
 
-                            double[] polje = new double[splitstrpolje.Length-1];
+                            double[] polje = new double[splitstrpolje.Length - 1];
 
                             for (int i = 0; i < polje.Length; i++)
                             {
@@ -451,6 +512,10 @@ namespace Leksikalni_analizator
 
                                 case "lin":
                                     rezultat = linear(polje);
+                                    break;
+
+                                case "der":
+                                    rezultat = derive(polje);
                                     break;
                             }
 
