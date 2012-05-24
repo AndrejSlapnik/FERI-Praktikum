@@ -439,7 +439,7 @@ namespace Spletno_racunanje
 
         public bool EP(ref List<double> polje)
         {
-            if (Tokenizer.currentToken().type == "lin3" || Tokenizer.currentToken().type == "std3" || Tokenizer.currentToken().type == "pear4" || Tokenizer.currentToken().type == "avg3" || Tokenizer.currentToken().lexeme == "abs" || Tokenizer.currentToken().lexeme == "cos" || Tokenizer.currentToken().lexeme == "sin" || Tokenizer.currentToken().lexeme == "sin" || Tokenizer.currentToken().lexeme == "(" || Tokenizer.currentToken().type == "float" || Tokenizer.currentToken().type == "float3" || Tokenizer.currentToken().lexeme == "-" || Tokenizer.currentToken().type == "vara" || Tokenizer.currentToken().type == "varb")
+            if (Tokenizer.currentToken().type == "der" || Tokenizer.currentToken().type == "lin3" || Tokenizer.currentToken().type == "std3" || Tokenizer.currentToken().type == "pear4" || Tokenizer.currentToken().type == "avg3" || Tokenizer.currentToken().lexeme == "abs" || Tokenizer.currentToken().lexeme == "cos" || Tokenizer.currentToken().lexeme == "sin" || Tokenizer.currentToken().lexeme == "sin" || Tokenizer.currentToken().lexeme == "(" || Tokenizer.currentToken().type == "float" || Tokenizer.currentToken().type == "float3" || Tokenizer.currentToken().lexeme == "-" || Tokenizer.currentToken().type == "vara" || Tokenizer.currentToken().type == "varb")
             {
                 double vrednostIzraza = 0;
                 bool rezultatE = E(ref vrednostIzraza);
@@ -557,94 +557,6 @@ namespace Spletno_racunanje
             }
             else return true;
         }
-
-        /*bool F(ref double vhodnoStevilo)
-        {
-            if (Tokenizer.currentToken().type == "abs3"
-                || Tokenizer.currentToken().type == "sin3"
-                || Tokenizer.currentToken().type == "cos3")
-            {
-                token spremenljivka = Tokenizer.currentToken();
-                Tokenizer.nextToken();
-                if (Tokenizer.currentToken().lexeme == "(")
-                {
-                    Tokenizer.nextToken();
-                    bool temp = E(ref vhodnoStevilo);
-                    switch (spremenljivka.lexeme)
-                    {
-                        case "abs":
-                            vhodnoStevilo = Math.Abs(vhodnoStevilo);
-                            break;
-                        case "sin":
-                            vhodnoStevilo = Math.Sin(vhodnoStevilo);
-                            break;
-                        case "cos":
-                            vhodnoStevilo = Math.Cos(vhodnoStevilo);
-                            break;
-                    }
-                    if (Tokenizer.currentToken().lexeme == ")")
-                    {
-                        Tokenizer.nextToken();
-                        return temp;
-                    }
-                    else return false;
-                }
-                return false;
-            }
-            else if (Tokenizer.currentToken().lexeme == "(")
-            {
-                Tokenizer.nextToken();
-                bool temp = E(ref vhodnoStevilo);
-
-                if (Tokenizer.currentToken().lexeme == ")")
-                {
-                    Tokenizer.nextToken();
-                    return temp;
-                }
-                else return false;
-            }
-            else if (Tokenizer.currentToken().type == "float"
-                || Tokenizer.currentToken().type == "float3"
-                )
-            {
-                vhodnoStevilo = double.Parse(Tokenizer.currentToken().lexeme);
-
-                Tokenizer.nextToken();
-                return true;
-            }
-
-            else if (Tokenizer.currentToken().lexeme == "-")
-            {
-                Tokenizer.nextToken();
-                if (Tokenizer.currentToken().type == "float"
-                || Tokenizer.currentToken().type == "float3"
-                )
-                {
-                    vhodnoStevilo = double.Parse(Tokenizer.currentToken().lexeme);
-
-                    Tokenizer.nextToken();
-                    return true;
-                }
-                else return false;
-            }
-            else if (Tokenizer.currentToken().type == "vara"
-                || Tokenizer.currentToken().type == "varb")
-            {
-                try
-                {
-                    if (pomnilnik.ContainsKey(Tokenizer.currentToken().lexeme))
-                        vhodnoStevilo = double.Parse(pomnilnik[Tokenizer.currentToken().lexeme]);
-                }
-                catch (Exception)
-                {
-                    izpis += "Ne da se uporabiti spremenljivke z polju v aritmetičnih izrazih!\r\n";
-                    vhodnoStevilo = double.NaN;
-                }
-                Tokenizer.nextToken();
-                return true;
-            }
-            return false;
-        }*/
 
         double avg(double[] polje)
         {
@@ -805,6 +717,76 @@ namespace Spletno_racunanje
             return yn;
         }
 
+        double derive(double[] polje)
+        {
+            if (polje.Length < 5 || polje.Length % 2 != 1) return 0;
+
+            double[] x = new double[(polje.Length - 1) / 2];
+            double[] y = new double[(polje.Length - 1) / 2];
+
+            double xt = polje[polje.Length - 1];
+
+            PointF[] points = new PointF[x.Length];
+
+            for (int i = 0; i < x.Length; i++)
+            {
+                x[i] = polje[i];
+            }
+
+            for (int i = 0; i < y.Length; i++)
+            {
+                y[i] = polje[i + x.Length];
+            }
+
+            for (int i = 0; i < points.Length; i++)
+            {
+                points[i] = new PointF((float)x[i], (float)y[i]);
+            }//pretvorimo polje v točke
+
+            List<PointF> listPointsOriginal = new List<PointF>(points);
+
+            listPointsOriginal.Sort(comparePoints);
+            //sortirano po x osi
+
+            List<PointF> listPoints = new List<PointF>();
+
+            for (int i = 0; i < listPointsOriginal.Count - 1; i++)
+            {
+                PointF razlika = new PointF( (listPointsOriginal[i+1].X + listPointsOriginal[i].X)/2, listPointsOriginal[i+1].Y - listPointsOriginal[i].Y);
+                listPoints.Add(razlika);
+            }
+
+            if (xt < listPoints.First().X) return 0;
+            if (xt > listPoints.Last().X) return 0;
+            //ni v intervalu
+
+            int secondPointIndex = listPoints.Count; //če ni nobena večja in je v intervalu, je zadnja večja
+
+            int firstPointIndex = listPoints.Count - 1;
+
+            for (int i = 0; i < listPoints.Count; i++)
+            {
+                if (xt < listPoints[i].X)
+                {
+                    secondPointIndex = i;
+                    firstPointIndex = i - 1;
+                    break;
+                }
+            }
+
+            double a, b;
+
+            a = xt - listPoints[firstPointIndex].X;
+            b = listPoints[secondPointIndex].X - xt;
+
+            double y1 = a / (a + b) * listPoints[firstPointIndex].Y;
+            double y2 = b / (a + b) * listPoints[secondPointIndex].Y;
+
+            double yn = y1 + y2;
+
+            return yn;
+        }
+
         bool F(ref double vhodnoStevilo)
         {
             if (Tokenizer.currentToken().type == "abs3"
@@ -839,7 +821,7 @@ namespace Spletno_racunanje
                 }
                 return false;
             }
-            else if (Tokenizer.currentToken().type == "lin3" || Tokenizer.currentToken().type == "avg3" || Tokenizer.currentToken().type == "std3" || Tokenizer.currentToken().type == "pear4")
+            else if (Tokenizer.currentToken().type == "der" || Tokenizer.currentToken().type == "lin3" || Tokenizer.currentToken().type == "avg3" || Tokenizer.currentToken().type == "std3" || Tokenizer.currentToken().type == "pear4")
             {
                 token funkcija = Tokenizer.currentToken();
                 Tokenizer.nextToken();
@@ -887,6 +869,10 @@ namespace Spletno_racunanje
 
                                 case "lin":
                                     rezultat = linear(polje);
+                                    break;
+
+                                case "der":
+                                    rezultat = derive(polje);
                                     break;
                             }
 
