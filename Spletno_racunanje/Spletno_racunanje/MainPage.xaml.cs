@@ -14,10 +14,200 @@ using System.IO.IsolatedStorage;
 using System.Windows.Media.Imaging;
 
 
+
 namespace Spletno_racunanje
 {
     public partial class MainPage : UserControl
     {
+        WriteableBitmap Binarna_pragovna_segmentacija(Image slika, int prag)
+        {
+            WriteableBitmap segmentirana = (WriteableBitmap)slika.Source;
+            
+            Color barva = new Color();
+            Color crna = Color.FromArgb(0, 0, 0, 0);
+            Color bela = Color.FromArgb(0, 255, 255, 255);
+
+            for (int i = 0; i < segmentirana.PixelWidth; i++)
+            {
+                for (int j = 0; j < segmentirana.PixelHeight; j++)
+                {
+                    barva = segmentirana.GetPixel(i, j);
+
+                    if (barva.R < prag && barva.G < prag && barva.B < prag)
+                    {
+                        segmentirana.SetPixel(i, j, crna);
+                    }
+
+                    else
+                    {
+                        segmentirana.SetPixel(i, j, bela);
+                    }
+                }
+            }
+
+            return segmentirana;
+        }
+
+        WriteableBitmap Pragovna_segmentacija(Image slika, int prag, int prag2)
+        {
+            WriteableBitmap segmentirana = (WriteableBitmap)slika.Source;
+
+            Color barva = new Color();
+            Color crna = Color.FromArgb(0, 0, 0, 0);
+            Color bela = Color.FromArgb(0, 255, 255, 255);
+            Color srednja = Color.FromArgb(0, 127, 127, 127);
+
+            for (int i = 0; i < segmentirana.PixelWidth; i++)
+            {
+                for (int j = 0; j < segmentirana.PixelHeight; j++)
+                {
+                    barva = segmentirana.GetPixel(i, j);
+
+                    if (barva.R < prag && barva.G < prag && barva.B < prag)
+                    {
+                        segmentirana.SetPixel(i, j, crna);
+                    }
+
+                    else if (barva.R > prag2 && barva.G > prag2 && barva.B > prag2)
+                    {
+                        segmentirana.SetPixel(i, j, bela);
+                    }
+
+                    else
+                    {
+                        segmentirana.SetPixel(i, j, srednja);
+                    }
+                }
+            }
+
+            return segmentirana;
+        }
+
+        Dictionary<int, int> Histogram_za_komponento(Image slika, int komponenta)
+        {
+            Dictionary<int, int> vrednosti = new Dictionary<int, int>();
+            WriteableBitmap segmentirana = (WriteableBitmap)slika.Source;
+
+            Color barva = new Color();
+
+            for (int i = 0; i < 256; i++)
+            {
+                vrednosti[i] = 0;
+            }
+
+            if (komponenta == 0)
+            {
+                for (int i = 0; i < segmentirana.PixelWidth; i++)
+                {
+                    for (int j = 0; j < segmentirana.PixelHeight; j++)
+                    {
+                        barva = segmentirana.GetPixel(i, j);
+
+                        vrednosti[barva.R]++;
+                    }
+                }
+            }
+
+            else if (komponenta == 1)
+            {
+                for (int i = 0; i < segmentirana.PixelWidth; i++)
+                {
+                    for (int j = 0; j < segmentirana.PixelHeight; j++)
+                    {
+                        barva = segmentirana.GetPixel(i, j);
+
+                        vrednosti[barva.G]++;
+                    }
+                }
+            }
+
+            else
+            {
+                for (int i = 0; i < segmentirana.PixelWidth; i++)
+                {
+                    for (int j = 0; j < segmentirana.PixelHeight; j++)
+                    {
+                        barva = segmentirana.GetPixel(i, j);
+
+                        vrednosti[barva.B]++;
+                    }
+                }
+            }
+
+            return vrednosti;
+        }
+
+        int Najvecji_po_komponenti(Dictionary<int, int> vrednosti, int komponenta)
+        {
+            int najvecje = 0, iteracija = 0;
+
+            for (int i = 0; i < vrednosti.Count; i++)
+            {
+                if (najvecje < vrednosti[i])
+                {
+                    najvecje = vrednosti[i];
+                    iteracija = i;
+                }
+            }
+
+            return iteracija;
+        }
+
+        WriteableBitmap Prilagojena_adaptivna_pragovna_segmentacija(Image slika, int prag, int prag2, int prag3)
+        {
+            WriteableBitmap segmentirana = (WriteableBitmap)slika.Source;
+
+            Color barva = new Color();
+            Color crna = Color.FromArgb(0, 0, 0, 0);
+            Color bela = Color.FromArgb(0, 255, 255, 255);
+
+            for (int i = 0; i < segmentirana.PixelWidth; i++)
+            {
+                for (int j = 0; j < segmentirana.PixelHeight; j++)
+                {
+                    barva = segmentirana.GetPixel(i, j);
+
+                    if (barva.R < prag)
+                    {
+                        segmentirana.SetPixel(i, j, Color.FromArgb(0, 0, barva.G, barva.B));
+                    }
+
+                    if (barva.R >= prag)
+                    {
+                        segmentirana.SetPixel(i, j, Color.FromArgb(0, 255, barva.G, barva.B));
+                    }
+
+                    barva = segmentirana.GetPixel(i, j);
+
+                    if (barva.G < prag2)
+                    {
+                        segmentirana.SetPixel(i, j, Color.FromArgb(0, barva.R, 0, barva.B));
+                    }
+
+                    if (barva.G >= prag2)
+                    {
+                        segmentirana.SetPixel(i, j, Color.FromArgb(0, barva.R, 255, barva.B));
+                    }
+
+                    barva = segmentirana.GetPixel(i, j);
+
+                    if (barva.B < prag2)
+                    {
+                        segmentirana.SetPixel(i, j, Color.FromArgb(0, barva.R, barva.G, 0));
+                    }
+
+                    if (barva.B >= prag2)
+                    {
+                        segmentirana.SetPixel(i, j, Color.FromArgb(0, barva.R, barva.G, 255));
+                    }
+                }
+            }
+
+            return segmentirana;
+        }
+
+
+
         public class PointF
         {
             public double X, Y;
@@ -28,7 +218,7 @@ namespace Spletno_racunanje
                 Y = b;
             }
         }
-
+        
         Dictionary<string, string> pomnilnik = new Dictionary<string, string>();
 
         string izpis = "", rezultatiIzpis="";
@@ -37,6 +227,7 @@ namespace Spletno_racunanje
         public MainPage()
         {
             InitializeComponent();
+            image1 = new Image();
         }
 
         public bool parse()
@@ -47,7 +238,121 @@ namespace Spletno_racunanje
 
         public bool PRI()
         {
-            if (Tokenizer.currentToken().type == "vara" || Tokenizer.currentToken().type == "varb")
+            if (Tokenizer.currentToken().type == "paps")
+            {
+                if (Tokenizer.currentToken().lexeme == "(")
+                {
+                    Tokenizer.nextToken();
+
+                    if (Tokenizer.currentToken().lexeme == ")")
+                    {
+                        Tokenizer.nextToken();
+
+                        Prilagojena_adaptivna_pragovna_segmentacija(LoadImage(), Najvecji_po_komponenti(Histogram_za_komponento(LoadImage(), 0), 0), Najvecji_po_komponenti(Histogram_za_komponento(LoadImage(), 1), 1), Najvecji_po_komponenti(Histogram_za_komponento(LoadImage(), 2), 2));
+
+                        if (Tokenizer.currentToken().lexeme == ";")
+                        {
+                            Tokenizer.nextToken();
+
+                            return PRI();
+                        }
+                        else return false;
+                    }
+                    else return false;
+                }
+                else return false;
+                return true;
+            }
+            else if (Tokenizer.currentToken().type == "ps")
+            {
+                if (Tokenizer.currentToken().lexeme == "(")
+                {
+                    Tokenizer.nextToken();
+
+                    if (Tokenizer.currentToken().type == "float")
+                    {
+                        int prag1 = int.Parse(Tokenizer.currentToken().lexeme);
+                        Tokenizer.nextToken();
+
+                        if (Tokenizer.currentToken().lexeme == ",")
+                        {
+                            Tokenizer.nextToken();
+
+                            if (Tokenizer.currentToken().type == "float")
+                            {
+                                int prag2 = int.Parse(Tokenizer.currentToken().lexeme);
+                                Tokenizer.nextToken();
+
+                                image1.Source = Pragovna_segmentacija(LoadImage(), prag1, prag2);
+                                image1.InvalidateArrange();
+                                image1.InvalidateMeasure();
+
+                                if (Tokenizer.currentToken().lexeme == ")")
+                                {
+                                    Tokenizer.nextToken();
+
+                                    if (Tokenizer.currentToken().lexeme == ";")
+                                    {
+                                        Tokenizer.nextToken();
+
+                                        return PRI();
+                                    }
+                                    else return false;
+                                }
+                                else return false;
+                            }
+                            else return false;
+                        }
+                        else return false;
+                    }
+                    else return false;
+                }
+                else return false;
+
+                return true;
+            }
+            else if (Tokenizer.currentToken().type == "bsp")
+            {
+                Tokenizer.nextToken();
+                if (Tokenizer.currentToken().lexeme == "(")
+                {
+                    Tokenizer.nextToken();
+
+                    if (Tokenizer.currentToken().type == "float")
+                    {
+                        int prag = int.Parse( Tokenizer.currentToken().lexeme );
+                        Tokenizer.nextToken();
+
+                        if (Tokenizer.currentToken().lexeme == ")")
+                        {
+                            Tokenizer.nextToken();
+
+                            //MessageBox.Show("Vrnilo sliko");
+
+                            image1.Source = Binarna_pragovna_segmentacija(LoadImage(), prag);
+                            
+                            
+                            image1.InvalidateArrange();
+                            image1.InvalidateMeasure();
+                            
+                            //MessageBox.Show("Vrnilo sliko 222");
+
+                            if (Tokenizer.currentToken().lexeme == ";")
+                            {
+                                Tokenizer.nextToken();
+
+                                return PRI();
+                            }
+                            else return false;
+                        }
+                        else return false;
+                    }
+                    else return false;
+                }
+                else return false;
+                return true;
+            }
+            else if (Tokenizer.currentToken().type == "vara" || Tokenizer.currentToken().type == "varb")
             {
                 token spremenljivka = Tokenizer.currentToken();
                 Tokenizer.nextToken();
@@ -739,15 +1044,15 @@ namespace Spletno_racunanje
                         //MessageBox.Show("Test lekser");
                         //MessageBox.Show(vsebina_tabele);
                         //MessageBox.Show(vsebina_datoteke);
-                        MessageBox.Show((leksikalni_analizator == null) + " (ali je null)");
+                        ////MessageBox.Show((leksikalni_analizator == null) + " (ali je null)");
                         //String tabela = leksikalni_analizator.vrniTabelo();
-                        MessageBox.Show("Test tabela");
+                        ////MessageBox.Show("Test tabela");
                         Tokenizer = leksikalni_analizator;
                         parse();
 
                         //textBox2.Text = izpis;
-                        MessageBox.Show(izpis);
-                        MessageBox.Show(rezultatiIzpis);
+                        ////MessageBox.Show(izpis);
+                        ////MessageBox.Show(rezultatiIzpis);
 
                         //Zacasni izpis tabele osnovnih leksikalnih simbolov in leksilanih vrednosti.
                         //MessageBox.Show(tabela.ToString());
@@ -764,6 +1069,43 @@ namespace Spletno_racunanje
             }
 
             else MessageBox.Show("Preklicano!");
+        }
+
+
+        Image LoadImage()
+        {
+            // The image will be read from isolated storage into the following byte array
+            byte[] data;
+
+            // Read the entire image in one go into a byte array
+            using (IsolatedStorageFile isf = IsolatedStorageFile.GetUserStoreForApplication())
+            {
+                // Open the file - error handling omitted for brevity
+                // Note: If the image does not exist in isolated storage the following exception will be generated:
+                // System.IO.IsolatedStorage.IsolatedStorageException was unhandled
+                // Message=Operation not permitted on IsolatedStorageFileStream
+                using (IsolatedStorageFileStream isfs = isf.OpenFile("izvorna.slika", FileMode.Open, FileAccess.Read))
+                {
+                    // Allocate an array large enough for the entire file
+                    data = new byte[isfs.Length];
+                    // Read the entire file and then close it
+                    isfs.Read(data, 0, data.Length);
+                    isfs.Close();
+                }
+            }
+            // Create memory stream and bitmap
+            MemoryStream ms = new MemoryStream(data);
+            WriteableBitmap bi = new WriteableBitmap(1000,1000);
+            // Set bitmap source to memory stream
+            bi.SetSource(ms);
+            // Create an image UI element – Note: this could be declared in the XAML instead
+            Image image = new Image();
+            // Set size of image to bitmap size for this demonstration
+            image.Height = bi.PixelHeight;
+            image.Width = bi.PixelWidth;
+            // Assign the bitmap image to the image’s source
+            image.Source = bi;
+            return image;
         }
 
         private void button2_Click(object sender, RoutedEventArgs e)
