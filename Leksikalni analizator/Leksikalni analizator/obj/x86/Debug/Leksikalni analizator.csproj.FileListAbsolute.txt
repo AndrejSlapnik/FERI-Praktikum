@@ -9,3 +9,4 @@ C:\PraktikumGIT\FERI-Praktikum\Leksikalni analizator\Leksikalni analizator\obj\x
 C:\PraktikumGIT\FERI-Praktikum\Leksikalni analizator\Leksikalni analizator\obj\x86\Debug\GenerateResource.write.1.tlog
 C:\PraktikumGIT\FERI-Praktikum\Leksikalni analizator\Leksikalni analizator\obj\x86\Debug\Leksikalni analizator.exe
 C:\PraktikumGIT\FERI-Praktikum\Leksikalni analizator\Leksikalni analizator\obj\x86\Debug\Leksikalni analizator.pdb
+C:\PraktikumGIT\FERI-Praktikum\Leksikalni analizator\Leksikalni analizator\bin\Debug\Blue hills.jpg

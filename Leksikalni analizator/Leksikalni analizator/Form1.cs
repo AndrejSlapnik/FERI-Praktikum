@@ -21,10 +21,314 @@ namespace Leksikalni_analizator
             token Token = Tokenizer.nextToken();
             return PRI() && Tokenizer.currentToken().eof;
         }
+        Bitmap Binarna_pragovna_segmentacija(Image slika, int prag)
+        {
+            Bitmap segmentirana = (Bitmap)slika.Clone();
+
+            Color barva = new Color();
+            Color crna = Color.FromArgb(0, 0, 0);
+            Color bela = Color.FromArgb(255, 255, 255);
+
+            for (int i = 0; i < segmentirana.Width; i++)
+            {
+                for (int j = 0; j < segmentirana.Height; j++)
+                {
+                    barva = segmentirana.GetPixel(i, j);
+
+                    if (barva.R < prag && barva.G < prag && barva.B < prag)
+                    {
+                        segmentirana.SetPixel(i, j, crna);
+                    }
+
+                    else
+                    {
+                        segmentirana.SetPixel(i, j, bela);
+                    }
+                }
+            }
+
+            return segmentirana;
+        }
+
+        Bitmap Pragovna_segmentacija(Image slika, int prag, int prag2)
+        {
+            Bitmap segmentirana = (Bitmap)slika.Clone();
+
+            Color barva = new Color();
+            Color crna = Color.FromArgb(0, 0, 0);
+            Color bela = Color.FromArgb(255, 255, 255);
+            Color srednja = Color.FromArgb(127, 127, 127);
+
+            for (int i = 0; i < segmentirana.Width; i++)
+            {
+                for (int j = 0; j < segmentirana.Height; j++)
+                {
+                    barva = segmentirana.GetPixel(i, j);
+
+                    if (barva.R < prag && barva.G < prag && barva.B < prag)
+                    {
+                        segmentirana.SetPixel(i, j, crna);
+                    }
+
+                    else if (barva.R > prag2 && barva.G > prag2 && barva.B > prag2)
+                    {
+                        segmentirana.SetPixel(i, j, bela);
+                    }
+
+                    else
+                    {
+                        segmentirana.SetPixel(i, j, srednja);
+                    }
+                }
+            }
+
+            return segmentirana;
+        }
+
+        Dictionary<int, int> Histogram_za_komponento(Image slika, int komponenta)
+        {
+            Dictionary<int, int> vrednosti = new Dictionary<int, int>();
+            Bitmap segmentirana = (Bitmap)slika.Clone();
+
+            Color barva = new Color();
+
+            for (int i = 0; i < 256; i++)
+            {
+                vrednosti[i] = 0;
+            }
+
+            if (komponenta == 0)
+            {
+                for (int i = 0; i < segmentirana.Width; i++)
+                {
+                    for (int j = 0; j < segmentirana.Height; j++)
+                    {
+                        barva = segmentirana.GetPixel(i, j);
+
+                        vrednosti[barva.R]++;
+                    }
+                }
+            }
+
+            else if (komponenta == 1)
+            {
+                for (int i = 0; i < segmentirana.Width; i++)
+                {
+                    for (int j = 0; j < segmentirana.Height; j++)
+                    {
+                        barva = segmentirana.GetPixel(i, j);
+
+                        vrednosti[barva.G]++;
+                    }
+                }
+            }
+
+            else
+            {
+                for (int i = 0; i < segmentirana.Width; i++)
+                {
+                    for (int j = 0; j < segmentirana.Height; j++)
+                    {
+                        barva = segmentirana.GetPixel(i, j);
+
+                        vrednosti[barva.B]++;
+                    }
+                }
+            }
+
+            return vrednosti;
+        }
+
+        int Najvecji_po_komponenti(Dictionary<int, int> vrednosti, int komponenta)
+        {
+            int najvecje = 0, iteracija = 0;
+
+            for (int i = 0; i < vrednosti.Count; i++)
+            {
+                if (najvecje < vrednosti[i])
+                {
+                    najvecje = vrednosti[i];
+                    iteracija = i;
+                }
+            }
+
+            return iteracija;
+        }
+
+        Bitmap Prilagojena_adaptivna_pragovna_segmentacija(Image slika, int prag, int prag2, int prag3)
+        {
+            Bitmap segmentirana = (Bitmap)slika.Clone();
+
+            Color barva = new Color();
+            Color crna = Color.FromArgb(0, 0, 0);
+            Color bela = Color.FromArgb(255, 255, 255);
+
+            for (int i = 0; i < segmentirana.Width; i++)
+            {
+                for (int j = 0; j < segmentirana.Height; j++)
+                {
+                    barva = segmentirana.GetPixel(i, j);
+
+                    if (barva.R < prag)
+                    {
+                        segmentirana.SetPixel(i, j, Color.FromArgb(0, barva.G, barva.B));
+                    }
+
+                    if (barva.R >= prag)
+                    {
+                        segmentirana.SetPixel(i, j, Color.FromArgb(255, barva.G, barva.B));
+                    }
+
+                    barva = segmentirana.GetPixel(i, j);
+
+                    if (barva.G < prag2)
+                    {
+                        segmentirana.SetPixel(i, j, Color.FromArgb(barva.R, 0, barva.B));
+                    }
+
+                    if (barva.G >= prag2)
+                    {
+                        segmentirana.SetPixel(i, j, Color.FromArgb(barva.R, 255, barva.B));
+                    }
+
+                    barva = segmentirana.GetPixel(i, j);
+
+                    if (barva.B < prag2)
+                    {
+                        segmentirana.SetPixel(i, j, Color.FromArgb(barva.R, barva.G, 0));
+                    }
+
+                    if (barva.B >= prag2)
+                    {
+                        segmentirana.SetPixel(i, j, Color.FromArgb(barva.R, barva.G, 255));
+                    }
+                }
+            }
+
+            return segmentirana;
+        }
+
+        Image LoadImage()
+        {
+            return pictureBox1.Image;
+        }
 
         public bool PRI()
         {
-            if (Tokenizer.currentToken().type == "vara" || Tokenizer.currentToken().type == "varb")
+            if (Tokenizer.currentToken().type == "paps")
+            {
+                Tokenizer.nextToken();
+                if (Tokenizer.currentToken().lexeme == "(")
+                {
+                    Tokenizer.nextToken();
+
+                    if (Tokenizer.currentToken().lexeme == ")")
+                    {
+                        Tokenizer.nextToken();
+
+                        pictureBox2.Image= Prilagojena_adaptivna_pragovna_segmentacija(LoadImage(), Najvecji_po_komponenti(Histogram_za_komponento(LoadImage(), 0), 0), Najvecji_po_komponenti(Histogram_za_komponento(LoadImage(), 1), 1), Najvecji_po_komponenti(Histogram_za_komponento(LoadImage(), 2), 2));
+
+                        if (Tokenizer.currentToken().lexeme == ";")
+                        {
+                            Tokenizer.nextToken();
+
+                            return PRI();
+                        }
+                        else return false;
+                    }
+                    else return false;
+                }
+                else return false;
+                return true;
+            }
+            else if (Tokenizer.currentToken().type == "ps")
+            {
+                Tokenizer.nextToken();
+                if (Tokenizer.currentToken().lexeme == "(")
+                {
+                    Tokenizer.nextToken();
+
+                    if (Tokenizer.currentToken().type == "float")
+                    {
+                        int prag1 = int.Parse(Tokenizer.currentToken().lexeme);
+                        Tokenizer.nextToken();
+
+                        if (Tokenizer.currentToken().lexeme == ",")
+                        {
+                            Tokenizer.nextToken();
+
+                            if (Tokenizer.currentToken().type == "float")
+                            {
+                                int prag2 = int.Parse(Tokenizer.currentToken().lexeme);
+                                Tokenizer.nextToken();
+
+                                pictureBox2.Image = Pragovna_segmentacija(LoadImage(), prag1, prag2);
+                               
+
+                                if (Tokenizer.currentToken().lexeme == ")")
+                                {
+                                    Tokenizer.nextToken();
+
+                                    if (Tokenizer.currentToken().lexeme == ";")
+                                    {
+                                        Tokenizer.nextToken();
+
+                                        return PRI();
+                                    }
+                                    else return false;
+                                }
+                                else return false;
+                            }
+                            else return false;
+                        }
+                        else return false;
+                    }
+                    else return false;
+                }
+                else return false;
+
+                return true;
+            }
+            else if (Tokenizer.currentToken().type == "bsp")
+            {
+                Tokenizer.nextToken();
+                if (Tokenizer.currentToken().lexeme == "(")
+                {
+                    Tokenizer.nextToken();
+
+                    if (Tokenizer.currentToken().type == "float")
+                    {
+                        int prag = int.Parse(Tokenizer.currentToken().lexeme);
+                        Tokenizer.nextToken();
+
+                        if (Tokenizer.currentToken().lexeme == ")")
+                        {
+                            Tokenizer.nextToken();
+
+                            //MessageBox.Show("Vrnilo sliko");
+
+                            pictureBox2.Image = Binarna_pragovna_segmentacija(LoadImage(), prag);
+
+
+
+                            //MessageBox.Show("Vrnilo sliko 222");
+
+                            if (Tokenizer.currentToken().lexeme == ";")
+                            {
+                                Tokenizer.nextToken();
+
+                                return PRI();
+                            }
+                            else return false;
+                        }
+                        else return false;
+                    }
+                    else return false;
+                }
+                else return false;
+                return true;
+            }
+            else if (Tokenizer.currentToken().type == "vara" || Tokenizer.currentToken().type == "varb")
             {
                 token spremenljivka = Tokenizer.currentToken();
                 Tokenizer.nextToken();
@@ -91,7 +395,7 @@ namespace Leksikalni_analizator
 
         public bool EP(ref List<double> polje)
         {
-            if (Tokenizer.currentToken().type == "der" || Tokenizer.currentToken().type == "lin3" || Tokenizer.currentToken().type == "std3" || Tokenizer.currentToken().type == "pear4" || Tokenizer.currentToken().type == "avg3" || Tokenizer.currentToken().lexeme == "abs" || Tokenizer.currentToken().lexeme == "cos" || Tokenizer.currentToken().lexeme == "sin" || Tokenizer.currentToken().lexeme == "sin" || Tokenizer.currentToken().lexeme == "(" || Tokenizer.currentToken().type == "float" || Tokenizer.currentToken().type == "float3" || Tokenizer.currentToken().lexeme == "-" || Tokenizer.currentToken().type == "vara" || Tokenizer.currentToken().type == "varb")
+            if (Tokenizer.currentToken().type == "int" || Tokenizer.currentToken().type == "der" || Tokenizer.currentToken().type == "lin3" || Tokenizer.currentToken().type == "std3" || Tokenizer.currentToken().type == "pear4" || Tokenizer.currentToken().type == "avg3" || Tokenizer.currentToken().lexeme == "abs" || Tokenizer.currentToken().lexeme == "cos" || Tokenizer.currentToken().lexeme == "sin" || Tokenizer.currentToken().lexeme == "sin" || Tokenizer.currentToken().lexeme == "(" || Tokenizer.currentToken().type == "float" || Tokenizer.currentToken().type == "float3" || Tokenizer.currentToken().lexeme == "-" || Tokenizer.currentToken().type == "vara" || Tokenizer.currentToken().type == "varb")
             {
                 double vrednostIzraza = 0;
                 bool rezultatE = E(ref vrednostIzraza);
@@ -430,6 +734,48 @@ namespace Leksikalni_analizator
             return yn;
         }
 
+        double integrate(double[] polje)
+        {
+            if (polje.Length < 4 || polje.Length % 2 != 0)
+                return 0;
+
+            double[] x = new double[polje.Length / 2];
+            double[] y = new double[polje.Length / 2];
+
+            PointF[] points = new PointF[x.Length];
+
+            for (int i = 0; i < x.Length; i++)
+            {
+                x[i] = polje[i];
+            }
+
+            for (int i = 0; i < y.Length; i++)
+            {
+                y[i] = polje[i + x.Length];
+            }
+
+            for (int i = 0; i < points.Length; i++)
+            {
+                points[i] = new PointF((float)x[i], (float)y[i]);
+            }//pretvorimo polje v točke
+
+            List<PointF> listPoints = new List<PointF>(points);
+
+            listPoints.Sort(comparePoints);
+            //sortirano po x osi
+
+            double sum=0;
+
+            for (int i=0 ;i< listPoints.Count-1; i++)
+            {
+                double Y = (listPoints[i].Y + listPoints[i + 1].Y) / 2;
+                double X = listPoints[i + 1].X - listPoints[i].X;
+                sum = sum + Y * X;
+            }
+
+            return sum;
+        }
+
         bool F(ref double vhodnoStevilo)
         {
             if (Tokenizer.currentToken().type == "abs3"
@@ -464,7 +810,7 @@ namespace Leksikalni_analizator
                 }
                 return false;
             }
-            else if (Tokenizer.currentToken().type == "der" || Tokenizer.currentToken().type == "lin3" || Tokenizer.currentToken().type == "avg3" || Tokenizer.currentToken().type == "std3" || Tokenizer.currentToken().type == "pear4")
+            else if (Tokenizer.currentToken().type == "int" || Tokenizer.currentToken().type == "der" || Tokenizer.currentToken().type == "lin3" || Tokenizer.currentToken().type == "avg3" || Tokenizer.currentToken().type == "std3" || Tokenizer.currentToken().type == "pear4")
             {
                 token funkcija = Tokenizer.currentToken();
                 Tokenizer.nextToken();
@@ -516,6 +862,10 @@ namespace Leksikalni_analizator
 
                                 case "der":
                                     rezultat = derive(polje);
+                                    break;
+
+                                case "int":
+                                    rezultat = integrate(polje);
                                     break;
                             }
 
@@ -610,6 +960,17 @@ namespace Leksikalni_analizator
             bool stop = false;
             token current;
 
+            public void init(string file)
+            {
+                this.file = file;
+                col = 1; startCol = 1;
+                row = 1; startRow = 1;
+                pos = 0;
+                stop = false;
+                stanje = "start";
+                lexeme = "";
+            }
+
             public token currentToken()
             {
                 return current;
@@ -623,9 +984,10 @@ namespace Leksikalni_analizator
                 stanja = pravila.Keys.ToList();
                 stanje = "start";
                 lexeme = "";
-                StreamReader reader = new StreamReader(filename);
-                file = reader.ReadToEnd();
-                reader.Close();
+                //StreamReader reader = new StreamReader(filename);
+                //file = reader.ReadToEnd();
+                //reader.Close();
+                file = filename;
             }
 
             public token nextToken()
@@ -701,10 +1063,8 @@ namespace Leksikalni_analizator
             }
         }
 
-        public Form1()
+        public void init()
         {
-            InitializeComponent();
-
             StreamReader reader = new StreamReader("table.txt");
 
             List<String> lines = new List<String>();
@@ -735,12 +1095,22 @@ namespace Leksikalni_analizator
 
                 pravila[ime] = preslikave;
 
-                if (preslikave.Count != abeceda.Count) throw new Exception("Napaka v vrstici \""+vrstica+"\", ni enako število možnosti kot je znakov v abecedi.");
+                if (preslikave.Count != abeceda.Count) throw new Exception("Napaka v vrstici \"" + vrstica + "\", ni enako število možnosti kot je znakov v abecedi.");
             } //zapišemo vsa pravila / preslikave
 
             reader.Close();
 
-            Tokenizer = new tokenizer(pravila, abeceda, končna_stanja, "test.txt");
+            Tokenizer = new tokenizer(pravila, abeceda, končna_stanja, textBox2.Text);
+        }
+
+
+        public Form1()
+        {
+            InitializeComponent();
+
+            pictureBox1.Image = Image.FromFile("Blue hills.jpg");
+
+            init();
         }
 
         tokenizer Tokenizer;
@@ -763,8 +1133,20 @@ namespace Leksikalni_analizator
 
         private void button3_Click(object sender, EventArgs e)
         {
+            Tokenizer.init( textBox2.Text);
+            izpis = "";
+            textBox1.Text = "";
             bool parsed = parse();
             textBox1.Text += "Parse uspel: " + parsed + "\r\nIzpis:\r\n"+izpis;
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                pictureBox1.Image = Image.FromFile(dialog.FileName);
+            }
         }
     }
 }

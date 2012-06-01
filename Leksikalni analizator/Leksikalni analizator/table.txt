@@ -1,6 +1,6 @@
-sep	op	float	float3	cos3	abs3	sin3	pri2	varb	vara	podp	shsep	vejica	print5	avg3	std3	pear4	lin3	bsp	paps	ps	der
+sep	op	float	float3	cos3	abs3	sin3	pri2	varb	vara	podp	shsep	vejica	print5	avg3	std3	pear4	lin3	bsp	int	ps	paps
 c	o	s	a	b	i	n	+	-	*	/	.	0	1	2	3	4	5	6	7	8	9	(	)	:	=	;	{	}	,	p	r	t	d	v	g	e	l
-start	cos1	~	sin1	vara	varb	~	~	op	op	op	op	float2	float	float	float	float	float	float	float	float	float	float	sep	sep	pri1	~	podp	shsep	shsep	vejica	print1	~	~	der1	~	~	~	lin1
+start	cos1	~	sin1	vara	varb	int1	~	op	op	op	op	float2	float	float	float	float	float	float	float	float	float	float	sep	sep	pri1	~	podp	shsep	shsep	vejica	print1	~	~	~	~	~	~	lin1
 cos1	~	cos2	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
 cos2	~	~	cos3	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
 cos3	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
@@ -38,10 +38,10 @@ lin2	~	~	~	~	~	~	lin3	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	
 lin3	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
 bsp2	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	bsp	~	~	~	~	~	~	~
 bsp	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
+int1	~	~	~	~	~	~	int2	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
+int2	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	int	~	~	~	~	~
+int	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
 ps	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
 paps2	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	paps3	~	~	~	~	~	~	~
 paps3	~	~	paps	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
 paps	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
-der1	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	der2	~
-der2	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	der	~	~	~	~	~	~
-der	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~	~
